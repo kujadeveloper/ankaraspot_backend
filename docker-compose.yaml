@@ -1,0 +1,48 @@
+services:
+  backend:
+    build: .
+    restart: always
+    command: bash -c 'gunicorn -w 2 -b 0.0.0.0:8000 FiyatorBackend.wsgi:application --reload --log-level debug'
+    ports:
+      - "8002:8000"
+    volumes:
+      - .:/app
+  db-0:
+    image: 'bitnami/postgresql:16.2.0'
+    volumes:
+      - ./docker-data/data:/bitnami/postgresql
+      - ./docker-data/log_master/:/logs/
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=master
+      - POSTGRESQL_REPLICATION_USER=ank_rep
+      - POSTGRESQL_REPLICATION_PASSWORD=ank_repHDk102#
+      - POSTGRESQL_PASSWORD=ank!092!
+      - POSTGRESQL_DATABASE=ank
+      - PGPASSWORD=ank!092!
+      - POSTGRESQL_EXTRA_FLAGS=-c logging_collector=on -c log_statement=all -c log_directory=/logs/ -c log_filename=postgresql-%Y-%m-%d.log
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.1
+    container_name: es01
+    environment:
+      - node.name=es01
+      - cluster.name=fiyator_search
+      - node.roles=master,data
+      - cluster.initial_master_nodes=es01
+      - discovery.seed_hosts=es01
+      - xpack.ml.enabled=true
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - ../docker-data/es01data:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+  cache:
+    image: redis:latest
+    restart: always
+    command: redis-server --save 20 1 --loglevel warning --requirepass redis1759
