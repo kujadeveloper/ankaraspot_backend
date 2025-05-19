@@ -256,12 +256,6 @@ CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
 CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
 BASE_URI = os.getenv("BASE_URI")
 
-ELASTICSEARCH_DSL = {
-    'default': {
-        'hosts': [os.getenv("ELASTICSEARCH")],
-        'timeout': 60,  # Custom timeout
-    },
-}
 
 CACHES = {
     "default": {
