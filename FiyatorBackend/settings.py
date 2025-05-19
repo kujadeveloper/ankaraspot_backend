@@ -47,38 +47,13 @@ sentry_sdk.init(
     profiles_sample_rate=1.0,
 )
 
-ALLOWED_HOSTS = ['apidev.fiyator.com',
-                 'dev.fiyator.com',
-                 'localhost',
-                 'www.fiyator.com',
-                 'fiyator.com',
-                 'api.fiyator.com',
-                 '192.168.1.9',
-                 '192.168.1.21']
+ALLOWED_HOSTS = ['api.ankaraspot.com']
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = ['*']
-CORS_ORIGIN_WHITELIST = ['https://apidev.fiyator.com',
-                         'https://dev.fiyator.com',
-                         'http://localhost:3000',
-                         'http://localhost:8000',
-                         'https://fiyator.com',
-                         'https://www.fiyator.com',
-                         'https://api.fiyator.com']
-CORS_ALLOWED_ORIGINS = ['https://apidev.fiyator.com',
-                        'https://dev.fiyator.com',
-                        'http://localhost:3000',
-                        'http://localhost:8000',
-                        'https://fiyator.com',
-                        'https://www.fiyator.com',
-                        'https://api.fiyator.com']
-CSRF_TRUSTED_ORIGINS = ['https://apidev.fiyator.com',
-                        'https://dev.fiyator.com',
-                        'http://localhost:3000',
-                        'http://localhost:8000',
-                        'https://fiyator.com',
-                        'https://www.fiyator.com',
-                        'https://api.fiyator.com']
+CORS_ORIGIN_WHITELIST = ['https://api.ankaraspot.com']
+CORS_ALLOWED_ORIGINS = ['https://api.ankaraspot.com']
+CSRF_TRUSTED_ORIGINS = ['https://api.ankaraspot.com']
 CORS_ALLOW_METHODS = [
     "DELETE",
     "GET",
