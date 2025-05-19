@@ -1,0 +1,324 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+{% block extrahead %}
+{{ block.super }}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+{% endblock %}
+
+{% block content %}
+{{ block.super }}
+<style>
+    /* Hide the original spec_values field */
+    .field-spec_values {
+        display: none !important;
+    }
+</style>
+<div style="clear: both;"></div>
+<div style="
+    margin: 40px auto;
+    padding: 30px;
+    max-width: 1000px;
+    background-color: #f8f8f8;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);">
+    <h2 style="text-align: center; margin-bottom: 25px; color: #417690; font-size: 24px; font-weight: 500;">Spec Values Selection</h2>
+    <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+        <div style="flex: 1;">
+            <label for="specSelect" style="display: block; margin-bottom: 8px; color: #666; font-weight: 500;">Available Specs</label>
+            <select id="specSelect" style="
+                padding: 10px;
+                margin-right: 10px;
+                border: 2px solid #ddd;
+                border-radius: 6px;
+                width: 100%;
+                height: 100px;
+                background-color: white;
+                font-size: 14px;
+                color: #444;
+                transition: all 0.3s ease;">
+                <option value="">Select a spec</option>
+                {% for spec in available_specs %}
+                    {% if not spec.is_deleted %}
+                        <option value="{{ spec.id }}">{{ spec.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div style="flex: 1;">
+            <label for="specValuesSelect" style="display: block; margin-bottom: 8px; color: #666; font-weight: 500;">Spec Values</label>
+            <select id="specValuesSelect" multiple style="
+                width: 100%;
+                padding: 10px;
+                border: 2px solid #ddd;
+                border-radius: 6px;
+                min-height: 200px;
+                background-color: white;
+                font-size: 14px;
+                color: #444;
+                transition: all 0.3s ease;">
+            </select>
+        </div>
+
+        <div style="display: flex; flex-direction: column; justify-content: center; gap: 15px; padding: 0 10px;">
+            <button type="button" id="moveToSelected" class="custom-button" style="
+                background-color: #417690;
+                color: white;
+                padding: 12px 25px;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: 500;
+                font-size: 14px;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                ➡️ Add
+            </button>
+            <button type="button" id="removeFromSelected" class="custom-button" style="
+                background-color: #ba2121;
+                color: white;
+                padding: 12px 25px;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: 500;
+                font-size: 14px;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                ⬅️ Remove
+            </button>
+        </div>
+
+        <div style="flex: 1;">
+            <label for="selectedValues" style="display: block; margin-bottom: 8px; color: #666; font-weight: 500;">Selected Values</label>
+            <select id="selectedValues" multiple style="
+                width: 100%;
+                padding: 10px;
+                border: 2px solid #ddd;
+                border-radius: 6px;
+                min-height: 200px;
+                background-color: white;
+                font-size: 14px;
+                color: #444;
+                transition: all 0.3s ease;">
+            </select>
+        </div>
+    </div>
+</div>
+
+<style>
+    select:hover, select:focus {
+        border-color: #417690 !important;
+        outline: none !important;
+    }
+    
+    .custom-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+    }
+    
+    select option {
+        padding: 8px;
+    }
+    
+    select option:hover {
+        background-color: #f0f0f0;
+    }
+    
+    select[multiple] option:checked {
+        background-color: #417690;
+        color: white;
+    }
+
+    /* Select2 custom styles */
+    .select2-container--default .select2-selection--multiple,
+    .select2-container--default .select2-selection--single {
+        border: 2px solid #ddd;
+        border-radius: 6px;
+    }
+
+    .select2-container--default .select2-selection--multiple:focus,
+    .select2-container--default .select2-selection--single:focus {
+        border-color: #417690;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #417690;
+    }
+
+    .select2-container--default .select2-search--inline .select2-search__field {
+        min-width: 150px;
+    }
+
+    /* Select2 custom styles - only for spec select */
+    #specSelect + .select2-container .select2-selection--single {
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        height: 40px;
+        line-height: 40px;
+        background-color: black !important;
+        color: white !important;
+    }
+
+    #specSelect + .select2-container .select2-selection--single:focus {
+        border-color: #417690;
+    }
+
+    #specSelect + .select2-container .select2-selection__rendered {
+        line-height: 36px;
+        padding-left: 12px;
+        color: white !important;
+    }
+
+    #specSelect + .select2-container .select2-selection__arrow {
+        height: 38px;
+    }
+
+    #specSelect + .select2-container .select2-selection__arrow b {
+        border-color: white transparent transparent transparent !important;
+    }
+
+    /* Dropdown menu styles */
+    .select2-dropdown {
+        background-color: black !important;
+        border: 2px solid #ddd;
+    }
+
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+        background-color: #333 !important;
+        color: white !important;
+        border: 1px solid #555 !important;
+    }
+
+    .select2-container--default .select2-results__option {
+        color: white !important;
+    }
+
+    .select2-container--default .select2-results__option[aria-selected=true] {
+        background-color: #444 !important;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #666 !important;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const specSelect = document.getElementById('specSelect');
+    const specValuesSelect = document.getElementById('specValuesSelect');
+    const selectedValues = document.getElementById('selectedValues');
+    const moveToSelectedBtn = document.getElementById('moveToSelected');
+    const removeFromSelectedBtn = document.getElementById('removeFromSelected');
+    const hiddenSpecValues = document.getElementById('id_spec_values');
+    
+    // Initialize Select2 only on the spec select
+    const $specSelect = django.jQuery('#specSelect').select2({
+        placeholder: "Search and select a spec",
+        width: '100%',
+        dropdownParent: django.jQuery('#specSelect').parent()
+    });
+
+    // Listen for only select2:select event
+    $specSelect.on('select2:select', async function(e) {
+        specValuesSelect.innerHTML = '';
+        const selectedSpec = this.value;
+        if (!selectedSpec) return;
+
+        try {
+            const url = `{% url 'admin:productmodel_get_spec_values' spec_id=0 %}`.replace('0', selectedSpec);
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            if (!data.values || !Array.isArray(data.values)) {
+                throw new Error('Invalid response format');
+            }
+            
+            data.values.forEach(value => {
+                if (!Array.from(selectedValues.options).some(opt => opt.value === value.id.toString())) {
+                    const option = new Option(value.value, value.id);
+                    specValuesSelect.add(option);
+                }
+            });
+            
+        } catch (error) {
+            console.error('Error:', error);
+            alert(`Error fetching spec values: ${error.message}`);
+        }
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Update hidden select2 field when selected values change
+    function updateHiddenField() {
+        const $select2 = django.jQuery('#id_spec_values');
+        $select2.find('option').remove();
+        
+        Array.from(selectedValues.options).forEach(option => {
+            const newOption = new Option(option.text, option.value, true, true);
+            $select2.append(newOption);
+        });
+        
+        $select2.trigger('change.select2');
+    }
+    
+    moveToSelectedBtn.addEventListener('click', function() {
+        Array.from(specValuesSelect.selectedOptions).forEach(option => {
+            const newOption = new Option(option.text, option.value);
+            selectedValues.add(newOption);
+            option.remove();
+        });
+        updateHiddenField();
+    });
+
+    removeFromSelectedBtn.addEventListener('click', function() {
+        const currentSpecId = specSelect.value;
+        
+        Array.from(selectedValues.selectedOptions).forEach(option => {
+            // If a spec is currently selected, move matching items back to specValuesSelect
+            if (currentSpecId) {
+                const optionValue = option.value;
+                const optionText = option.text;
+                
+                // Add to specValuesSelect if it belongs to current spec
+                const newOption = new Option(optionText, optionValue);
+                specValuesSelect.add(newOption);
+            }
+            option.remove();
+        });
+        updateHiddenField();
+    });
+
+    // Initialize with existing values if any
+    if (hiddenSpecValues) {
+        django.jQuery('#id_spec_values option:selected').each(function() {
+            const option = new Option(this.text, this.value);
+            selectedValues.add(option);
+        });
+    }
+});
+</script>
+{% endblock %}

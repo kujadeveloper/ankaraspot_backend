@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Confirmation</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333333;
+        }
+        p {
+            color: #555555;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="background: white">
+        <img style="background: white" src="https://image.fiyator.com/logos/logo.webp" width="200">
+        <h4>Lütfen Üyeliğinizi Onaylayınız</h4>
+        <p>Sevgili {{ name }},</p>
+        <p>Kayıt olduğun için teşekkür ederiz. Lütfen aşağıdaki onaylama düğmesine basarak üyeliğinizi aktif ediniz:</p>
+        <a href="{{ url }}" class="button">Email Onayla</a>
+        <p>Bu kaydı siz yapmadıysanız, bu maili onaylamayınız.</p>
+        <p>Herhangi bir sorunuz ve şikayetiniz için, bizimle iletişime geçebilirsiniz. info@fiyator.com.</p>
+        <p>Saygılarımızla,<br><b>Fiyator ekibi</b></p>
+    </div>
+</body>
+</html>

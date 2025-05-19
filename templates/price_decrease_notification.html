@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #28a745;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .price-change {
+            color: #28a745;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Fiyat Güncelleme Bildirimi</h1>
+        </div>
+        <div class="content">
+            <p>Değerli Üyemiz</p>
+            <p>İyi haber! {{product_name}} ürününün fiyatı düştü.</p>
+            <p>Yeni fiyat: <span class="price-change">{{new_price}}</span><br>
+               Önceki fiyat: {{old_price}}</p>
+            <p>Bu fırsatı kaçırmayın!</p>
+            <a href="{{product_url}}" style="color: #ffffff;" class="button">Ürünü Görüntüle</a>
+            <p>Saygılarımızla,<br>Fiyator Ekibi</p>
+        </div>
+    </div>
+</body>
+</html>
