@@ -72,8 +72,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_elasticsearch_dsl',
-    'django_elasticsearch_dsl_drf',
     'django_celery_beat',
     'django_select2',
     'rest_framework',
