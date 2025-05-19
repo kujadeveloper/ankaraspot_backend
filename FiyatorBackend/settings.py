@@ -47,7 +47,7 @@ sentry_sdk.init(
     profiles_sample_rate=1.0,
 )
 
-ALLOWED_HOSTS = ['api.ankaraspot.com']
+ALLOWED_HOSTS = ['api.ankaraspot.com', '65.108.217.222']
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = ['*']
